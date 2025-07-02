@@ -6,9 +6,27 @@ from os import system, name
 titulos = []
 
 
+# Funções do programa
 def limpar_tela():
     #verifica o sistema operacional e executa o comando adequado
     system("cls" if name == "nt" else "clear")
+
+
+ cadastrar_titulos():
+    limpar_tela()
+    nome = str(input("Nome do título: ")).strip().title()
+    tipo = str(input("Tipo (Filme/Serie): ")).strip().title()
+    ano = int(input("Ano de lançamento: "))
+    
+    titulo = {
+        "nome": nome,
+        "tipo": tipo,
+        "ano": ano
+    }
+    
+    titulos.append(titulo)
+    print(f"✅ '{nome}' cadastrado com sucesso!")
+    pause(2)
 
 
 def exibir_menu():
@@ -20,6 +38,7 @@ def exibir_menu():
     print("4 - Remover um título")
     print("5 - Sair")
 
+
 def main():
     while True:
         exibir_menu()
@@ -27,6 +46,7 @@ def main():
         if opcao == 1:
             print("Opção de cadastrar títulos selecionada.")
             pause(2)
+            cadastrar_titulos()
         elif opcao == 2:
             print("Opção de listar títulos selecionada.")
             pause(2)
@@ -48,4 +68,6 @@ def cadastrar_titulo():
     tipo = str(input("Tipo (Filme/série): ")).strip().title()
     ano = int(input("Ano de lançamento: "))
 
+
+# Programa princial
 main()
