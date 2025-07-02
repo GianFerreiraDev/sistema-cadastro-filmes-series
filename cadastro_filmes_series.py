@@ -1,7 +1,18 @@
 # Bibliotecas
 from time import sleep as pause
+from os import system, name
+
+# Lista onde vamos armazenar os títulos cadastrados
+titulos = []
+
+
+def limpar_tela():
+    #verifica o sistema operacional e executa o comando adequado
+    system("cls" if name == "nt" else "clear")
+
 
 def exibir_menu():
+    limpar_tela()
     print("\n🎬 Sistema de cadastro de Filmes e Séries 🎬 ")
     print("1 - Cadastrar novo título")
     print("2 - Listar todos os títulos")
