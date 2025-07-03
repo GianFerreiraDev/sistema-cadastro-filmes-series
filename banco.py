@@ -15,3 +15,12 @@ def conectar_banco():
     """)
     conexao.commit()
     return conexao, cursor
+
+
+def inserir_titulo(conexao, cursor, nome, tipo, ano):
+    # Função para inserir novos titulos ao banco
+    cursor.execute("""
+        INSERT INTO titulos (nome, tipo, ano)
+        VALUES (?, ?, ?)
+    """),  (nome, tipo, ano)
+    conexao.commit()
