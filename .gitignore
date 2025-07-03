@@ -1,0 +1,41 @@
+# Ignorar arquivos de banco de dados
+*.db
+*.sqlite3
+*.sql
+*.SQL
+
+# Arquivos Python compilados
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos temporários e de backup comuns no celular
+*.bak
+*.tmp
+*.swp
+*.log
+
+# Ambientes virtuais (caso venha a usar)
+venv/
+env/
+
+# Configurações de IDEs/editors comuns
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Pydroid3 (Android)
+Pydroid3/
+.cache/
+
+# Replit
+.replit
+.replit.db
+
+# Acode
+.acode/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
