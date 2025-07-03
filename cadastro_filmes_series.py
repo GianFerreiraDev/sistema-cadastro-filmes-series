@@ -1,10 +1,13 @@
 # Bibliotecas
 from time import sleep as pause
 from os import system, name
+from banco import conectar_banco
+
+# Conexão com o banco de dados
+conexao, cursor = conectar_banco()
 
 # Lista onde vamos armazenar os títulos cadastrados
 titulos = []
-
 
 # Funções do programa
 def limpar_tela():
