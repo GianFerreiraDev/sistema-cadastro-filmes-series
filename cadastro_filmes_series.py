@@ -43,6 +43,25 @@ def cadastrar_titulos():
             print("Opção invalida. Tente novamente.")
 
 
+def listar_titulos():
+    limpar_tela()
+    global titulos
+    if not titulos:
+        print("📪 Nenhum título cadastrado ainda.")
+        pause(2)
+        return
+        
+    print("📋 Lista de Títulos Cadastrados")
+    for i, titulo in enumerate(titulos, start=1):
+        print(f"{i}. {titulo['nome']} ({titulo['tipo']}, {titulo['ano']})")
+    while True:
+        opc = str(input("Voltar para o menu principai? (Sim): ")).strip().lower()
+        if opc == "sim":
+            break
+        else:
+            print("Opção invalida. Tente novamente.")
+
+
 def exibir_menu():
     # Menu principal do sistema
     limpar_tela()
@@ -66,6 +85,7 @@ def main():
         elif opcao == 2:
             print("Opção de listar títulos selecionada.")
             pause(2)
+            listar_titulos()
         elif opcao == 3:
             print("Opção de atulizar título selecionada.")
             pause(2)
