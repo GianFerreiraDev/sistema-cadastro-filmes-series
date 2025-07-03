@@ -74,14 +74,13 @@ def atualizar_titulos():
     listar_titulos()
     try:
         indice = int(input("Digite o número do titulo que deseja atualizar: ")) - 1
-        print(indice)
         if 0 <= indice < len(titulos):
             print("Deixe em branco se não quiser alterar aquele campo.")
             novo_nome = str(input("Novo nome: ")).strip().title()
             novo_tipo = str(input("Novo tipo (Filme/Serie): ")).strip().title()
             novo_ano = input("Novo ano: ").strip()
             if novo_ano:
-                novo_ano = int(novo_ano)
+                novo_ano = int(novo_ano)    
             else:
                 novo_ano = None
             
@@ -101,7 +100,27 @@ def atualizar_titulos():
         pause(2)
 
 
-
+def remover_titulos():
+    # Remove titulos salvos
+    limpar_tela()
+    global titulos
+    if not titulos:
+        print("📪 Nenhum título cadastrado ainda.")
+        pause(2)
+        return
+    listar_titulos()
+    try:
+        indice = int(input("Digite o número do titulo que deseja removerr: ")) - 1
+        if 0 <= indice < len(titulos):
+            titulo_removido = titulos.pop(indice)
+            print(f"🗑️'{titulo_removido['nome']}' removido com seucesso!")
+            pause(2)
+        else:
+            print("❌ Número invalido.")
+            pause(2)
+    except ValueError:
+        print("⚠️ Entrada invalida. Use apenas números.")
+        pause(2)
 
 
 def exibir_menu():
@@ -135,6 +154,7 @@ def main():
         elif opcao == 4:
             print("Opção de remover título selecionada.")
             pause(2)
+            remover_titulos()
         elif opcao == 5:
             print("Opção de sair selecionada.")
             pause(2)
