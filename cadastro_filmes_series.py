@@ -44,6 +44,7 @@ def cadastrar_titulos():
 
 
 def listar_titulos():
+    # Lista todos os titulos salvos
     limpar_tela()
     global titulos
     if not titulos:
@@ -60,6 +61,47 @@ def listar_titulos():
             break
         else:
             print("Opção invalida. Tente novamente.")
+
+
+def atualizar_titulos():
+    # Atualiza os titulos salvos
+    limpar_tela()
+    global titulos
+    if not titulos:
+        print("📪 Nenhum título cadastrado ainda.")
+        pause(2)
+        return
+    listar_titulos()
+    try:
+        indice = int(input("Digite o número do titulo que deseja atualizar: ")) - 1
+        print(indice)
+        if 0 <= indice < len(titulos):
+            print("Deixe em branco se não quiser alterar aquele campo.")
+            novo_nome = str(input("Novo nome: ")).strip().title()
+            novo_tipo = str(input("Novo tipo (Filme/Serie): ")).strip().title()
+            novo_ano = input("Novo ano: ").strip()
+            if novo_ano:
+                novo_ano = int(novo_ano)
+            else:
+                novo_ano = None
+            
+            if novo_nome:
+                titulos[indice]["nome"] = novo_nome
+            if novo_tipo:
+                titulos[indice]["tipo"] = novo_tipo
+            if novo_ano is not None:
+                titulos[indice]["ano"] = novo_ano
+            print("✅ Titulo atualizado com sucesso!")
+            pause(2)
+        else:
+            print("❌ Número invalido.")
+            pause(2)
+    except ValueError:
+        print("⚠️ Entrada invalida. Use apenas números.")
+        pause(2)
+
+
+
 
 
 def exibir_menu():
@@ -89,6 +131,7 @@ def main():
         elif opcao == 3:
             print("Opção de atulizar título selecionada.")
             pause(2)
+            atualizar_titulos()
         elif opcao == 4:
             print("Opção de remover título selecionada.")
             pause(2)
