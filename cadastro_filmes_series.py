@@ -8,11 +8,12 @@ titulos = []
 
 # Funções do programa
 def limpar_tela():
-    #verifica o sistema operacional e executa o comando adequado
+    # Verifica o sistema operacional e executa o comando adequado
     system("cls" if name == "nt" else "clear")
 
 
- cadastrar_titulos():
+def cadastrar_titulos():
+    # Cadastra filmes e series
     limpar_tela()
     nome = str(input("Nome do título: ")).strip().title()
     tipo = str(input("Tipo (Filme/Serie): ")).strip().title()
@@ -27,9 +28,23 @@ def limpar_tela():
     titulos.append(titulo)
     print(f"✅ '{nome}' cadastrado com sucesso!")
     pause(2)
+    while True:
+        pause(2)
+        opc = str(input("Cadastrar um novo título? (Sim/Nao): ")).strip().lower()
+        if opc == "nao":
+            print("Retornando ao menu principal")
+            pause(2)
+            break
+        elif opc == "sim":
+            print("Cadastrando um novo titulo.")
+            pause(2)
+            cadastrar_titulos()
+        else:
+            print("Opção invalida. Tente novamente.")
 
 
 def exibir_menu():
+    # Menu principal do sistema
     limpar_tela()
     print("\n🎬 Sistema de cadastro de Filmes e Séries 🎬 ")
     print("1 - Cadastrar novo título")
@@ -40,6 +55,7 @@ def exibir_menu():
 
 
 def main():
+    # Programa principal
     while True:
         exibir_menu()
         opcao = int(input("Escolha uma opção de 1 a 5: "))
@@ -63,10 +79,6 @@ def main():
         else:
             print("Opção inválida. Tente novamente!")
             pause(2)
-def cadastrar_titulo():
-    nome = str(input("Nome do titulo: ")).strip().title()
-    tipo = str(input("Tipo (Filme/série): ")).strip().title()
-    ano = int(input("Ano de lançamento: "))
 
 
 # Programa princial
