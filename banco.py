@@ -22,5 +22,5 @@ def inserir_titulo(conexao, cursor, nome, tipo, ano):
     cursor.execute("""
         INSERT INTO titulos (nome, tipo, ano)
         VALUES (?, ?, ?)
-    """),  (nome, tipo, ano)
+    """,  (nome, tipo, ano))
     conexao.commit()
