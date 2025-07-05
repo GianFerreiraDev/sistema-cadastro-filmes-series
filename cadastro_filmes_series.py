@@ -1,7 +1,7 @@
 # Bibliotecas
 from time import sleep as pause
 from os import system, name
-from banco import conectar_banco
+from banco import conectar_banco, inserir_titulo
 
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
@@ -15,35 +15,54 @@ def limpar_tela():
     system("cls" if name == "nt" else "clear")
 
 
-def cadastrar_titulos():
+def cadastrar_titulos(conexao, cursor):
     # Cadastra filmes e series
     limpar_tela()
-    nome = str(input("Nome do título: ")).strip().title()
-    tipo = str(input("Tipo (Filme/Serie): ")).strip().title()
-    ano = int(input("Ano de lançamento: "))
-    
-    titulo = {
-        "nome": nome,
-        "tipo": tipo,
-        "ano": ano
-    }
-    
-    titulos.append(titulo)
-    print(f"✅ '{nome}' cadastrado com sucesso!")
-    pause(2)
     while True:
-        pause(2)
-        opc = str(input("Cadastrar um novo título? (Sim/Nao): ")).strip().lower()
-        if opc == "nao":
+        print("{}".format("Cadastro de novo titulo"))
+        while True:
+            nome = input("Nome do título: ").strip().title()
+            if len(nome) < 1:
+                print("Digite um nome valido. Tente novamente!")
+            else:
+                break
+        
+        while True:
+            tipo = input("Tipo (Filme/Serie): ").strip().title()
+            if tipo in ("Filme", "Serie"):
+                break
+            else:
+                print("Digite um tipo valido. Tente novamente!")
+    
+        while True:
+            try:
+                ano = int(input("Ano de lançamento: "))
+                if ano > 1984:
+                    break
+                else:
+                    print("⚠️ Use um ano apos 1984.")
+            except ValueError:
+                print("⚠️ Ano inválido. Use uma data válida.")
+    
+        try:
+            inserir_titulo(conexao, cursor, nome, tipo, ano)
+            print(f"✅ '{nome}' cadastrado com sucesso no banco de dados!")
+            pause(2)
+        except Exception as erro:
+            print(f"Erro ao salvar no banco de dados: {erro}")
+
+        while True:
+            opc = input("Cadastrar um novo título? (Sim/Não): ").strip().lower()
+            if opc in ("sim", "s", "não", "nao", "n""):
+                break
+            print("Opção inválida. Tente novamente.")
+            
+        if opc in ("não", "nao", "n"):
             print("Retornando ao menu principal")
             pause(2)
             break
-        elif opc == "sim":
-            print("Cadastrando um novo titulo.")
-            pause(2)
-            cadastrar_titulos()
-        else:
-            print("Opção invalida. Tente novamente.")
+        # Obs: usei break aqui porque essa função é chamada exclusivamente pelo menu principal.
+# Caso futuramente seja chamada por outros módulos, trocar por return para garantir o encerramento imediato.
 
 
 def listar_titulos():
@@ -145,7 +164,7 @@ def main():
         if opcao == 1:
             print("Opção de cadastrar títulos selecionada.")
             pause(2)
-            cadastrar_titulos()
+            cadastrar_titulos(conexao, cursor)
         elif opcao == 2:
             print("Opção de listar títulos selecionada.")
             pause(2)
