@@ -28,4 +28,4 @@ def inserir_titulo(conexao, cursor, nome, tipo, ano):
 
 def buscar_todos_titulos(cursor):
     cursor.execute("SELECT id, nome, tipo, ano FROM titulos")
-    return cursor.fetchall().
+    return cursor.fetchall()
