@@ -1,7 +1,7 @@
 # Bibliotecas
 from time import sleep as pause
 from os import system, name
-from banco import conectar_banco, inserir_titulo
+from banco import conectar_banco, inserir_titulo, buscar_todos_titulos
 
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
@@ -53,7 +53,7 @@ def cadastrar_titulos(conexao, cursor):
 
         while True:
             opc = input("Cadastrar um novo título? (Sim/Não): ").strip().lower()
-            if opc in ("sim", "s", "não", "nao", "n""):
+            if opc in ("sim", "s", "não", "nao", "n"):
                 break
             print("Opção inválida. Tente novamente.")
             
@@ -61,25 +61,29 @@ def cadastrar_titulos(conexao, cursor):
             print("Retornando ao menu principal")
             pause(2)
             break
-        # Obs: usei break aqui porque essa função é chamada exclusivamente pelo menu principal.
-# Caso futuramente seja chamada por outros módulos, trocar por return para garantir o encerramento imediato.
+        # Obs: usei break aqui porque essa função é chamada exclusivamente pelo menu principal...
+# Caso futuramente seja chamada por outros módulos, trocar por return para garantir o encerramento imediato...
 
 
 def listar_titulos():
     # Lista todos os titulos salvos
     limpar_tela()
-    global titulos
-    if not titulos:
+    resultados = buscar_todos_titulos(cursor)
+    if not resultados:
         print("📪 Nenhum título cadastrado ainda.")
         pause(2)
         return
-        
-    print("📋 Lista de Títulos Cadastrados")
-    for i, titulo in enumerate(titulos, start=1):
-        print(f"{i}. {titulo['nome']} ({titulo['tipo']}, {titulo['ano']})")
+      
+    print(f"{'📋 Lista de Títulos Cadastrados':^50}")
+    print("-" * 50)
+    print(f"{'Nº':>2}   {'Título':<25} | {'Tipo':<8} | Ano")
+    print("-" * 50)
+    for i, (id, nome, tipo, ano) in enumerate(resultados, start=1):
+        print(f"{i:>2}.  {nome:<25} | {tipo:<8} | {ano}")
+    print("-" * 50)
     while True:
-        opc = str(input("Voltar para o menu principai? (Sim): ")).strip().lower()
-        if opc == "sim":
+        opc = str(input("\nVoltar para o menu principai? (Sim): ")).strip().lower()
+        if opc in ("sim", "s"):
             break
         else:
             print("Opção invalida. Tente novamente.")
