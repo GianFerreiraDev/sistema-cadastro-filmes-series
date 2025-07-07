@@ -27,5 +27,31 @@ def inserir_titulo(conexao, cursor, nome, tipo, ano):
 
 
 def buscar_todos_titulos(cursor):
+    # Função para listar todos os titulos do banco
     cursor.execute("SELECT id, nome, tipo, ano FROM titulos")
     return cursor.fetchall()
+    
+    
+def atualizar_titulo(cursor, conexao, id, novo_nome=None, novo_tipo=None, novo_ano=None):
+    # Função para atualizar os titulos do banco
+    campos = []
+    valores = []
+    
+    if novo_nome:
+        campos.append("nome = ?")
+        valores.append(novo_nome)
+    if novo_tipo:
+        campos.append("tipo = ?")
+        valores.append(novo_tipo)
+    if novo_ano:
+        campos.append("ano = ?")
+        valores.append(novo_ano)
+        
+    if not campos:
+        return False:
+
+    valores.append(id)
+    sql = f"UPDATE titulos SET {', '.join(campos)} WHERE id = ?"
+    cursor.execute(sql, valores)
+    conexao.commit()
+    return True
