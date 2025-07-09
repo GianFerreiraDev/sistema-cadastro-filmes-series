@@ -190,31 +190,34 @@ def main():
     # Programa principal
     while True:
         exibir_menu()
-        opcao = int(input("Escolha uma opção de 1 a 5: "))
-        if opcao == 1:
-            print("Opção de cadastrar títulos selecionada.")
+        try:
+            opcao = int(input("Escolha uma opção de 1 a 5: "))
+            if opcao == 1:
+                print("Opção de cadastrar títulos selecionada.")
+                pause(2)
+                cadastrar_titulos(conexao, cursor)
+            elif opcao == 2:
+                print("Opção de listar títulos selecionada.")
+                pause(2)
+                listar_titulos()
+            elif opcao == 3:
+                print("Opção de atulizar título selecionada.")
+                pause(2)
+                atualizar_titulos()
+            elif opcao == 4:
+                print("Opção de remover título selecionada.")
+                pause(2)
+                remover_titulos()
+            elif opcao == 5:
+                print("Opção de sair selecionada.")
+                pause(2)
+                break
+            else:
+                print("Opção inválida. Tente novamente!")
+                pause(2)
+        except ValueError:
+            print("digite um numero inteiro.")
             pause(2)
-            cadastrar_titulos(conexao, cursor)
-        elif opcao == 2:
-            print("Opção de listar títulos selecionada.")
-            pause(2)
-            listar_titulos()
-        elif opcao == 3:
-            print("Opção de atulizar título selecionada.")
-            pause(2)
-            atualizar_titulos()
-        elif opcao == 4:
-            print("Opção de remover título selecionada.")
-            pause(2)
-            remover_titulos()
-        elif opcao == 5:
-            print("Opção de sair selecionada.")
-            pause(2)
-            break
-        else:
-            print("Opção inválida. Tente novamente!")
-            pause(2)
-
 
 # Programa princial
 main()
