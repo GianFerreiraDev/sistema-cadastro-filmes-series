@@ -48,7 +48,7 @@ def atualizar_titulo(cursor, conexao, id, novo_nome=None, novo_tipo=None, novo_a
         valores.append(novo_ano)
         
     if not campos:
-        return False:
+        return False
 
     valores.append(id)
     sql = f"UPDATE titulos SET {', '.join(campos)} WHERE id = ?"
