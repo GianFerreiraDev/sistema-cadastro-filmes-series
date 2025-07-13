@@ -50,8 +50,16 @@ def atualizar_titulo(cursor, conexao, id, novo_nome=None, novo_tipo=None, novo_a
     if not campos:
         return False
 
+
     valores.append(id)
     sql = f"UPDATE titulos SET {', '.join(campos)} WHERE id = ?"
     cursor.execute(sql, valores)
     conexao.commit()
     return True
+
+
+def remover_titulo(cursor, conexao, id):
+    # Função para remover titulos do banco
+    cursor.execute("DELETE FROM titulos WHERE id = ?", (id,))
+    conexao.commit()
+    return cursor.rowcount > 0
