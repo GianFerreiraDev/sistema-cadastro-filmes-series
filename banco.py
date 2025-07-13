@@ -71,3 +71,16 @@ def remover_titulo(cursor, conexao, id):
     cursor.execute("DELETE FROM titulos WHERE id = ?", (id,))
     conexao.commit()
     return cursor.rowcount > 0
+
+
+def cadastrar_usuario(cursor, conexao, nome, email, senha, is_admin=False):
+    # Função para cadastrar novos usuários
+    try:
+        cursor.execute("""
+            INSERT INTO usuarios (nome, email, senha, is_admin)
+            VALUES (?, ?, ?, ?)
+        """, (nome, email, senha, int(is_admin)))
+        conexao.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
