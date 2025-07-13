@@ -2,16 +2,24 @@ import sqlite3
 
 # Funções do banco de dados
 def conectar_banco():
-    # Função para conectar e garantir que a tabela existe no banco 
+    # Função para conectar e garantir que as tabelas existam no banco 
     conexao = sqlite3.connect("filmes_series.db")
     cursor = conexao.cursor()
-    cursor.execute("""
+    cursor.executescript("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            senha TEXT NOT NULL,
+            is_admin INTEGER DEFAULT 0
+        );
+
         CREATE TABLE IF NOT EXISTS titulos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             tipo TEXT NOT NULL,
             ano INTEGER NOT NULL
-        )
+        );
     """)
     conexao.commit()
     return conexao, cursor
