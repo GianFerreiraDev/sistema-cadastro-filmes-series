@@ -1,7 +1,7 @@
 # Bibliotecas
 from time import sleep as pause
 from os import system, name
-from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo
+from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo
 
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
@@ -154,25 +154,49 @@ def atualizar_titulos():
 
 def remover_titulos():
     # Remove titulos salvos
-    limpar_tela()
-    global titulos
-    if not titulos:
-        print("📪 Nenhum título cadastrado ainda.")
-        pause(2)
-        return
-    listar_titulos()
-    try:
-        indice = int(input("Digite o número do titulo que deseja removerr: ")) - 1
-        if 0 <= indice < len(titulos):
-            titulo_removido = titulos.pop(indice)
-            print(f"🗑️'{titulo_removido['nome']}' removido com seucesso!")
+    while True:
+        try:
+            limpar_tela()
+            resultados = buscar_todos_titulos(cursor)
+            if not resultados:
+                print("📪 Nenhum título para remover.")
+                pause(2)
+                return
+            print(f"{'📋 Lista de Títulos Cadastrados':^50}")
+            print("-" * 50)
+            print(f"{'ID':>2}   {'Título':<25} | {'Tipo':<8} | Ano")
+            print("-" * 50)
+            for i, (id, nome, tipo, ano) in enumerate(resultados):
+                print(f"{id:>2}.  {nome:<25} | {tipo:<8} | {ano}")
+            print("-" * 50)
+            indice = int(input("Digite o ID do titulo que deseja remover: "))
+            while True:
+                confirmação = input(f"Tem certeza que deseja remover o título com ID {indice}? (Sim/Não): ").strip().lower()
+                if confirmação in ("sim", "s", "não", "nao", "n"):
+                    break
+                print("⚠️ Opção inválida. Tente novamente.")
+            if confirmação in ("não", "nao", "n"):
+                print("❌ Operação cancelada. Retornando ao menu principal.")
+                pause(2)
+                return
+            if remover_titulo(cursor, conexao, indice):
+                print(f"🗑️ Título removido com seucesso!")
+                pause(2)
+                while True:
+                    opc = input("Remover outro título? (Sim/Não): ").strip().lower()
+                    if opc in ("sim", "s", "não", "nao", "n"):
+                        break
+                    print("⚠️Opção inválida. Tente novamente.")
+                if opc in ("não", "nao", "n"):
+                    print("Retornando ao menu principal")
+                    pause(2)
+                    return
+            else:
+                print("❌ ID não encontrado. Verifique e tente novamente.")
+                pause(2)
+        except ValueError:
+            print("⚠️ Entrada invalida. Use apenas números.")
             pause(2)
-        else:
-            print("❌ Número invalido.")
-            pause(2)
-    except ValueError:
-        print("⚠️ Entrada invalida. Use apenas números.")
-        pause(2)
 
 
 def exibir_menu():
