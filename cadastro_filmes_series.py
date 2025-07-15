@@ -1,7 +1,8 @@
 # Bibliotecas
+import re
 from time import sleep as pause
 from os import system, name
-from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo
+from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo, cadastrar_usuario
 
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
@@ -199,6 +200,76 @@ def remover_titulos():
             pause(2)
 
 
+def cadastrar_usuarios():
+    # Função para cadastrar novos usuários
+    # Expressão regular para validar e-mail simples
+    padrao_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    padrao_senha = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$'
+    while True:
+        limpar_tela()
+        print("-" * 50)
+        print(f"{'Cadastro de novo usuário':^50}")
+        print("-" * 50)
+        while True:
+            nome = input("Nome do usuário: ").strip().title()
+            if len(nome) < 1:
+                print("Digite um nome valido. Tente novamente!")
+                pause(2)
+            else:
+                break
+        
+        while True:
+            email = input("E-mail do usuário: ").strip().lower()
+            if re.match(padrao_email, email):
+                break
+            else:
+                print("⚠️ E-mail inválido. Tente novamente.")
+                pause(2)
+        
+        while True:
+            senha = input("Senha do usuário: ").strip()
+            if re.match(padrao_senha, senha):
+                break
+            else:
+                print("Senha fraca. A senha precisa ter pelo menos:")
+                print("- 8 caracteres")
+                print("- 1 letra maiúscula")
+                print("- 1 letra minúscula")
+                print("- 1 número")
+                print("- 1 caractere especial (!@#$...)")
+                pause(2)
+        while True:
+            resp = input("É administrador? (Sim/Não): ").strip().lower()
+            if resp in ("sim", "s"):
+                is_admin = True
+                break
+            elif resp in ("não", "nao", "n"):
+                is_admin = False
+                break
+            else:
+                print("⚠️ Opção invalida. Apenas (Sim/Não).")
+                pause(2)
+
+        sucesso = cadastrar_usuario(cursor, conexao, nome, email, senha, is_admin)
+        if sucesso:
+            print(f"✅ Usuário '{nome}' cadastrado com sucesso!")
+            pause(2)
+        else:
+            print(f"❌ Falha: Email já está cadastrado")
+            pause(2)
+        
+        while True:
+            opc = input("Cadastrar outro usuário? (Sim/Não): ").strip().lower()
+            if opc in ("sim", "s", "não", "nao", "n"):
+                break
+            print("⚠️ Opção inválida. Tente novamente.")
+        
+        if opc in ("não", "nao", "n"):
+            print("Retornando ao menu principal")
+            pause(2)
+            break
+
+
 def exibir_menu():
     # Menu principal do sistema
     limpar_tela()
@@ -207,7 +278,8 @@ def exibir_menu():
     print("2 - Listar todos os títulos")
     print("3 - Atualizar um título")
     print("4 - Remover um título")
-    print("5 - Sair")
+    print("5 - Cadastrar um usuário")
+    print("6 - Sair")
 
 
 def main():
@@ -233,6 +305,10 @@ def main():
                 pause(2)
                 remover_titulos()
             elif opcao == 5:
+                print("Opção de cadastrar usuario selecionada.")
+                pause(2)
+                cadastrar_usuarios()
+            elif opcao == 6:
                 print("Opção de sair selecionada.")
                 pause(2)
                 break
