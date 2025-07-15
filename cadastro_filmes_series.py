@@ -1,5 +1,6 @@
 # Bibliotecas
 import re
+from getpass import getpass
 from time import sleep as pause
 from os import system, name
 from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo, cadastrar_usuario
@@ -7,8 +8,6 @@ from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualiza
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
 
-# Lista onde vamos armazenar os títulos cadastrados
-titulos = []
 
 # Funções do programa
 def limpar_tela():
@@ -16,15 +15,23 @@ def limpar_tela():
     system("cls" if name == "nt" else "clear")
 
 
-def cadastrar_titulos(conexao, cursor):
-    # Cadastra filmes e series
+def cabecalho(mensagem):
+    # Exibe o cabeçalho com a mensagem centralizada
     limpar_tela()
+    print("-" * 50)
+    print(f"{mensagem:^50}")
+    print("-" * 50)
+
+
+def cadastrar_titulos_ui(conexao, cursor):
+    # Cadastra filmes e series
     while True:
-        print("{}".format("Cadastro de novo titulo"))
+        cabecalho("Cadastro de novo título")
         while True:
             nome = input("Nome do título: ").strip().title()
             if len(nome) < 1:
-                print("Digite um nome valido. Tente novamente!")
+                print("⚠️ Digite um nome valido. Tente novamente!")
+                pause(2)
             else:
                 break
         
@@ -34,6 +41,7 @@ def cadastrar_titulos(conexao, cursor):
                 break
             else:
                 print("Digite um tipo valido. Tente novamente!")
+                pause(2)
     
         while True:
             try:
@@ -42,8 +50,10 @@ def cadastrar_titulos(conexao, cursor):
                     break
                 else:
                     print("⚠️ Use um ano apos 1894.")
+                    pause(2)
             except ValueError:
                 print("⚠️ Ano inválido. Use uma data válida.")
+                pause(2)
     
         try:
             inserir_titulo(conexao, cursor, nome, tipo, ano)
@@ -51,14 +61,16 @@ def cadastrar_titulos(conexao, cursor):
             pause(2)
         except Exception as erro:
             print(f"Erro ao salvar no banco de dados: {erro}")
+            pause(2)
 
         while True:
             opc = input("Cadastrar um novo título? (Sim/Não): ").strip().lower()
-            if opc in ("sim", "s", "não", "nao", "n"):
+            if opc in ("sim", "s", "yes", "y", "não", "nao", "not", "no", "n"):
                 break
-            print("Opção inválida. Tente novamente.")
+            print("⚠️ Opção inválida. Tente novamente.")
+            pause(2)
             
-        if opc in ("não", "nao", "n"):
+        if opc in ("não", "nao", "not", "no", "n"):
             print("Retornando ao menu principal")
             pause(2)
             break
@@ -66,44 +78,44 @@ def cadastrar_titulos(conexao, cursor):
 # Caso futuramente seja chamada por outros módulos, trocar por return para garantir o encerramento imediato...
 
 
-def listar_titulos():
+def listar_titulos_ui():
     # Lista todos os titulos salvos
-    limpar_tela()
     resultados = buscar_todos_titulos(cursor)
+
+    cabecalho("📋 Lista de Títulos Cadastrados")
     if not resultados:
         print("📪 Nenhum título cadastrado ainda.")
         pause(2)
         return
-      
-    print(f"{'📋 Lista de Títulos Cadastrados':^50}")
-    print("-" * 50)
     print(f"{'Nº':>2}   {'Título':<25} | {'Tipo':<8} | Ano")
     print("-" * 50)
-    for i, (id, nome, tipo, ano) in enumerate(resultados, start=1):
-        print(f"{i:>2}.  {nome:<25} | {tipo:<8} | {ano}")
+    for (id, nome, tipo, ano) in resultados:
+        print(f"{id:>2}.  {nome:<25} | {tipo:<8} | {ano}")
     print("-" * 50)
     while True:
-        opc = str(input("\nVoltar para o menu principai? (Sim): ")).strip().lower()
-        if opc in ("sim", "s"):
+        opc = str(input("\nVoltar para o menu principal? (Sim): ")).strip().lower()
+        if opc in ("sim", "s", "yes", "y"):
+            print("Retornando ao menu principal")
+            pause(2)
             break
-        else:
-            print("Opção invalida. Tente novamente.")
+        print("⚠️ Opção invalida. Tente novamente.")
+        pause(2)
 
 
-def atualizar_titulos():
+def atualizar_titulos_ui():
     # Atualiza os titulos salvos
     while True:
         limpar_tela()
         resultados = buscar_todos_titulos(cursor)
+
+        cabecalho("📋 Lista de Títulos Cadastrados")
         if not resultados:
             print("📪 Nenhum título cadastrado ainda.")
             pause(2)
             return
-        print(f"{'📋 Lista de Títulos Cadastrados':^50}")
-        print("-" * 50)
         print(f"{'ID':>2}   {'Título':<25} | {'Tipo':<8} | Ano")
         print("-" * 50)
-        for i, (id, nome, tipo, ano) in enumerate(resultados):
+        for (id, nome, tipo, ano) in resultados:
             print(f"{id:>2}.  {nome:<25} | {tipo:<8} | {ano}")
         print("-" * 50)
         while True:
@@ -135,6 +147,7 @@ def atualizar_titulos():
                         break
                     else:
                         print("⚠️ Nenhuma alteração feita.")
+                        pause(2)
                         break
                 else:
                     print("❌ ID não encontrado. Verifique e tente novamente.")
@@ -143,37 +156,37 @@ def atualizar_titulos():
                 print("⚠️ Entrada invalida. Use apenas números.")
                 pause(2)
         while True:
-            opc = input("Atualizar utro título? (Sim/Não): ").strip().lower()
-            if opc in ("sim", "s", "não", "nao", "n"):
+            opc = input("Atualizar outro título? (Sim/Não): ").strip().lower()
+            if opc in ("sim", "s", "yes", "y", "não", "nao", "not", "no", "n"):
                 break
             print("⚠️Opção inválida. Tente novamente.")
-        if opc in ("não", "nao", "n"):
+        if opc in ("não", "nao", "not", "no", "n"):
             print("Retornando ao menu principal")
             pause(2)
             break
 
 
-def remover_titulos():
+def remover_titulos_ui():
     # Remove titulos salvos
     while True:
+        resultados = buscar_todos_titulos(cursor)
         try:
-            limpar_tela()
-            resultados = buscar_todos_titulos(cursor)
+            cabecalho("📋 Lista de Títulos Cadastrados")
             if not resultados:
                 print("📪 Nenhum título para remover.")
                 pause(2)
                 return
-            print(f"{'📋 Lista de Títulos Cadastrados':^50}")
-            print("-" * 50)
+            
             print(f"{'ID':>2}   {'Título':<25} | {'Tipo':<8} | Ano")
             print("-" * 50)
-            for i, (id, nome, tipo, ano) in enumerate(resultados):
+            
+            for (id, nome, tipo, ano) in resultados:
                 print(f"{id:>2}.  {nome:<25} | {tipo:<8} | {ano}")
             print("-" * 50)
             indice = int(input("Digite o ID do titulo que deseja remover: "))
             while True:
                 confirmação = input(f"Tem certeza que deseja remover o título com ID {indice}? (Sim/Não): ").strip().lower()
-                if confirmação in ("sim", "s", "não", "nao", "n"):
+                if confirmação in ("sim", "s", "yes", "y", "não", "nao", "not", "no", "n"):
                     break
                 print("⚠️ Opção inválida. Tente novamente.")
             if confirmação in ("não", "nao", "n"):
@@ -181,13 +194,14 @@ def remover_titulos():
                 pause(2)
                 return
             if remover_titulo(cursor, conexao, indice):
-                print(f"🗑️ Título removido com seucesso!")
+                print(f"🗑️ Título removido com sucesso!")
                 pause(2)
                 while True:
                     opc = input("Remover outro título? (Sim/Não): ").strip().lower()
-                    if opc in ("sim", "s", "não", "nao", "n"):
+                    if opc in ("sim", "s", "yes", "y", "não", "nao", "not", "no", "n"):
                         break
                     print("⚠️Opção inválida. Tente novamente.")
+                    pause(2)
                 if opc in ("não", "nao", "n"):
                     print("Retornando ao menu principal")
                     pause(2)
@@ -200,16 +214,16 @@ def remover_titulos():
             pause(2)
 
 
-def cadastrar_usuarios():
+def cadastrar_usuarios_ui():
     # Função para cadastrar novos usuários
-    # Expressão regular para validar e-mail simples
+
+    # Expressão regular para validar e-mail simples e senhas padrão
     padrao_email = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     padrao_senha = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$'
+
     while True:
-        limpar_tela()
-        print("-" * 50)
-        print(f"{'Cadastro de novo usuário':^50}")
-        print("-" * 50)
+        cabecalho("Cadastro de novo usuário")
+        
         while True:
             nome = input("Nome do usuário: ").strip().title()
             if len(nome) < 1:
@@ -227,7 +241,7 @@ def cadastrar_usuarios():
                 pause(2)
         
         while True:
-            senha = input("Senha do usuário: ").strip()
+            senha = getpass("Senha do usuário: ").strip()
             if re.match(padrao_senha, senha):
                 break
             else:
@@ -240,10 +254,10 @@ def cadastrar_usuarios():
                 pause(2)
         while True:
             resp = input("É administrador? (Sim/Não): ").strip().lower()
-            if resp in ("sim", "s"):
+            if resp in ("sim", "s", "yes", "y"):
                 is_admin = True
                 break
-            elif resp in ("não", "nao", "n"):
+            elif resp in ("não", "nao", "not", "no", "n"):
                 is_admin = False
                 break
             else:
@@ -260,11 +274,12 @@ def cadastrar_usuarios():
         
         while True:
             opc = input("Cadastrar outro usuário? (Sim/Não): ").strip().lower()
-            if opc in ("sim", "s", "não", "nao", "n"):
+            if opc in ("sim", "s", "yes", "y", "não", "nao", "not", "no", "n"):
                 break
             print("⚠️ Opção inválida. Tente novamente.")
+            pause(2)
         
-        if opc in ("não", "nao", "n"):
+        if opc in ("não", "nao", "not", "no", "n"):
             print("Retornando ao menu principal")
             pause(2)
             break
@@ -272,8 +287,7 @@ def cadastrar_usuarios():
 
 def exibir_menu():
     # Menu principal do sistema
-    limpar_tela()
-    print("\n🎬 Sistema de cadastro de Filmes e Séries 🎬 ")
+    cabecalho("🎬 Sistema de cadastro de Filmes e Séries 🎬")
     print("1 - Cadastrar novo título")
     print("2 - Listar todos os títulos")
     print("3 - Atualizar um título")
@@ -287,29 +301,29 @@ def main():
     while True:
         exibir_menu()
         try:
-            opcao = int(input("Escolha uma opção de 1 a 5: "))
+            opcao = int(input("Escolha uma opção de 1 a 6: "))
             if opcao == 1:
                 print("Opção de cadastrar títulos selecionada.")
                 pause(2)
-                cadastrar_titulos(conexao, cursor)
+                cadastrar_titulos_ui(conexao, cursor)
             elif opcao == 2:
                 print("Opção de listar títulos selecionada.")
                 pause(2)
-                listar_titulos()
+                listar_titulos_ui()
             elif opcao == 3:
-                print("Opção de atulizar título selecionada.")
+                print("Opção de atualizar título selecionada.")
                 pause(2)
-                atualizar_titulos()
+                atualizar_titulos_ui()
             elif opcao == 4:
                 print("Opção de remover título selecionada.")
                 pause(2)
-                remover_titulos()
+                remover_titulos_ui()
             elif opcao == 5:
                 print("Opção de cadastrar usuario selecionada.")
                 pause(2)
-                cadastrar_usuarios()
+                cadastrar_usuarios_ui()
             elif opcao == 6:
-                print("Opção de sair selecionada.")
+                print("Encerrando o sistema. Até logo!")
                 pause(2)
                 break
             else:
@@ -319,5 +333,6 @@ def main():
             print("digite um numero inteiro.")
             pause(2)
 
-# Programa princial
+
+# Programa principal
 main()
