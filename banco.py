@@ -84,3 +84,20 @@ def cadastrar_usuario(cursor, conexao, nome, email, senha, is_admin=False):
         return True
     except sqlite3.IntegrityError:
         return False
+
+
+def login_usuario(cursor, email, senha):
+    # Função para autenticar usuários
+    cursor.execute("""
+        SELECT id, nome, is_admin
+        FROM usuarios
+        WHERE email = ? AND senha = ?
+        """, (email, senha))
+    resultado = cursor.fetchone()
+    if resultado:
+        return {
+            "id": resultado[0],
+            "nome": resultado[1],
+            "is_admin": bool(resultado[2])
+        }
+    return None
