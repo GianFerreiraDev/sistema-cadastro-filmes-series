@@ -3,7 +3,7 @@ import re
 from getpass import getpass
 from time import sleep as pause
 from os import system, name
-from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo, cadastrar_usuario
+from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualizar_titulo, remover_titulo, cadastrar_usuario, login_usuario
 
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
@@ -283,6 +283,27 @@ def cadastrar_usuarios_ui():
             print("Retornando ao menu principal")
             pause(2)
             break
+
+
+def fazer_login_ui():
+    # Função para autenticar usuários
+    cabecalho("🔑 Login no Sistema")
+    email = input("E-mail: ").strip().lower()
+    senha = getpass("Senha: ").strip()
+
+    usuario = login_usuario(cursor, email, senha)
+    if usuario:
+        print(f"👋 Bem-vindo, {usuario['nome']}!")
+        if usuario['is_admin']:
+            print("Você tem privilégios de administrador.")
+        else:
+            print("Você é um usuário comum.")
+        pause(2)
+        return usuario
+    else:
+        print("❌ E-mail ou senha inválidos. Tente novamente.")
+        pause(2)
+        return None
 
 
 def exibir_menu():
