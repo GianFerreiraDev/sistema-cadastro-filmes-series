@@ -320,6 +320,9 @@ def exibir_menu():
 def main():
     # Programa principal
     while True:
+        usuario_logado = None
+        while not usuario_logado:
+            usuario_logado = fazer_login_ui()
         exibir_menu()
         try:
             opcao = int(input("Escolha uma opção de 1 a 6: "))
