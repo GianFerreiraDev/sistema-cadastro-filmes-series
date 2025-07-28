@@ -308,22 +308,14 @@ def fazer_login_ui():
 
 def exibir_menu():
     # Menu principal do sistema
-    cabecalho("🎬 Sistema de cadastro de Filmes e Séries 🎬")
-    print("1 - Cadastrar novo título")
-    print("2 - Listar todos os títulos")
-    print("3 - Atualizar um título")
-    print("4 - Remover um título")
-    print("5 - Cadastrar um usuário")
-    print("6 - Sair")
-
-
-def main():
-    # Programa principal
     while True:
-        usuario_logado = None
-        while not usuario_logado:
-            usuario_logado = fazer_login_ui()
-        exibir_menu()
+        cabecalho("🎬 Sistema de cadastro de Filmes e Séries 🎬")
+        print("1 - Cadastrar novo título")
+        print("2 - Listar todos os títulos")
+        print("3 - Atualizar um título")
+        print("4 - Remover um título")
+        print("5 - Cadastrar um usuário")
+        print("6 - Sair")
         try:
             opcao = int(input("Escolha uma opção de 1 a 6: "))
             if opcao == 1:
@@ -351,11 +343,20 @@ def main():
                 pause(2)
                 break
             else:
-                print("Opção inválida. Tente novamente!")
+                print("⚠️ Opção inválida. Tente novamente!")
                 pause(2)
         except ValueError:
-            print("digite um numero inteiro.")
+            print("❌ Digite um numero inteiro.")
             pause(2)
+
+
+def main():
+    # Programa principal
+    while True:
+        usuario_logado = None
+        while not usuario_logado:
+            usuario_logado = fazer_login_ui()
+        exibir_menu()
 
 
 # Programa principal
