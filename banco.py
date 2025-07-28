@@ -27,12 +27,12 @@ def conectar_banco():
     return conexao, cursor
 
 
-def inserir_titulo(conexao, cursor, nome, tipo, ano):
+def inserir_titulo(conexao, cursor, nome, tipo, ano, usuario_id):
     # Função para inserir novos titulos ao banco
     cursor.execute("""
-        INSERT INTO titulos (nome, tipo, ano)
-        VALUES (?, ?, ?)
-    """,  (nome, tipo, ano))
+        INSERT INTO titulos (nome, tipo, ano, usuario_id)
+        VALUES (?, ?, ?, ?)
+    """,  (nome, tipo, ano, usuario_id))
     conexao.commit()
 
 
