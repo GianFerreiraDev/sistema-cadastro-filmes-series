@@ -18,7 +18,9 @@ def conectar_banco():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             tipo TEXT NOT NULL,
-            ano INTEGER NOT NULL
+            ano INTEGER NOT NULL,
+            usuario_id INTEGER NOT NULL,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
         );
     """)
     conexao.commit()
