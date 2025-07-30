@@ -8,6 +8,8 @@ from banco import conectar_banco, inserir_titulo, buscar_todos_titulos, atualiza
 # Conexão com o banco de dados
 conexao, cursor = conectar_banco()
 
+nome_usuario = ""  # Variável global para armazenar o nome do usuário logado
+
 
 # Funções do programa
 def limpar_tela():
@@ -20,10 +22,11 @@ def cabecalho(mensagem):
     limpar_tela()
     print("-" * 50)
     print(f"{mensagem:^50}")
+    print(f"{nome_usuario:^50}")
     print("-" * 50)
 
 
-def cadastrar_titulos_ui(conexao, cursor):
+def cadastrar_titulos_ui(usuario_id):
     # Cadastra filmes e series
     while True:
         cabecalho("Cadastro de novo título")
@@ -56,11 +59,11 @@ def cadastrar_titulos_ui(conexao, cursor):
                 pause(2)
     
         try:
-            inserir_titulo(conexao, cursor, nome, tipo, ano)
+            inserir_titulo(conexao, cursor, nome, tipo, ano, usuario_id)
             print(f"✅ '{nome}' cadastrado com sucesso no banco de dados!")
             pause(2)
         except Exception as erro:
-            print(f"Erro ao salvar no banco de dados: {erro}")
+            print(f"❌ Erro ao salvar no banco de dados: {erro}")
             pause(2)
 
         while True:
@@ -306,8 +309,9 @@ def fazer_login_ui():
         return None
 
 
-def exibir_menu():
+def exibir_menu(usuario_logado):
     # Menu principal do sistema
+    global nome_usuario
     while True:
         cabecalho("🎬 Sistema de cadastro de Filmes e Séries 🎬")
         print("1 - Cadastrar novo título")
@@ -321,7 +325,7 @@ def exibir_menu():
             if opcao == 1:
                 print("Opção de cadastrar títulos selecionada.")
                 pause(2)
-                cadastrar_titulos_ui(conexao, cursor)
+                cadastrar_titulos_ui(usuario_logado['id'])
             elif opcao == 2:
                 print("Opção de listar títulos selecionada.")
                 pause(2)
@@ -341,6 +345,7 @@ def exibir_menu():
             elif opcao == 6:
                 print("Encerrando o sistema. Até logo!")
                 pause(2)
+                nome_usuario = ""  # Limpa o nome do usuário ao sair
                 break
             else:
                 print("⚠️ Opção inválida. Tente novamente!")
@@ -352,11 +357,14 @@ def exibir_menu():
 
 def main():
     # Programa principal
+    global nome_usuario
     while True:
         usuario_logado = None
         while not usuario_logado:
             usuario_logado = fazer_login_ui()
-        exibir_menu()
+            if usuario_logado:
+                nome_usuario = usuario_logado['nome']
+        exibir_menu(usuario_logado)
 
 
 # Programa principal
